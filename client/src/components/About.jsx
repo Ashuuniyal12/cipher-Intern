@@ -5,9 +5,27 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import PasswordModal from './Modals/PasswordModal';
 import IntrestModal from './Modals/IntrestModal';
+import { useSelector } from 'react-redux'
+import { useState } from 'react';
 
 const About = () => {
+    const user = useSelector(state => state.auth.user)
+    let aboutValue  = user.user.about?. user.user.about 
+    
+    const [content , setContent] = useState({about:  aboutValue ,password: "", intrest: [], linkedin: "", github: "", twitter: "", facebook: "", instagram: "", website: "", highestEducation: "", whatDoYouDo: "",});
 
+    const [about , setAbout] = useState(true)
+
+    const handleabout=(e)=>{
+        if(!about){
+            console.log(content)
+        }
+        setAbout(!about)
+    }
+
+    const handleupdate=(e)=>{
+        setContent({...content,[e.target.name]: e.target.value})
+    }
     return (
         <main className='bg-[#F2F5FA] px-[2%] font-["Open Sans"]'>
 
@@ -15,12 +33,12 @@ const About = () => {
                 <span className='font-[700] text-[14px] font-[#2c3d4f]'>
                     ABOUT ME
                 </span>
-                <button className=' px-6 py-1 rounded-lg text-white text-[13px] bg-[#f3912e]'>Edit</button>
+                <button className=' px-6 py-1 rounded-lg text-white text-[13px] bg-[#f3912e]' onClick={handleabout}>{about ? "Edit": "Save"}</button>
             </div>
 
             <div className=' bg-white flex  items-center rounded-lg'>
-                <textarea rows="4" placeholder='Add Something about you' disabled={true} className='bg-white rounded-lg p-[1%] text-[rgba(8,15,15,.75)] w-full' />
-                <BsIcon.BsFillPencilFill  hidden={false} className=' text-[16px]' />
+                <textarea rows="4" placeholder='Add Something about you' disabled={about} name="about" onChange={handleupdate} value ={content.about} className='bg-white rounded-lg p-[1%] text-[rgba(8,15,15,.75)] w-full' />
+                <BsIcon.BsFillPencilFill  hidden={about} className=' text-[16px]' />
             </div>
 
             <hr height="4px" className='w-[100%] my-[1%]' />
