@@ -53,3 +53,32 @@ export const LoginUser = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 }
+
+export const changePassword = async (req, res) => {
+    try{
+
+        const {oldPassword ,email} = req.body;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+        
+        const oldUser = await UserModal.findOne({ email});
+        
+        if (oldUser) {
+            const validPassword = await bcrypt.compare(oldPassword, oldUser.password);
+            if (!validPassword) {
+                return res.status(401).json({ error: "Invalid Old Password" });
+            }
+            else {
+                oldUser.password = hashedPassword;
+                const savedUser = await oldUser.save();
+                res.status(200).json({ user: savedUser });
+            }
+        }
+        else {
+            return res.status(400).json({ error: "User not found" });
+        }
+
+    }catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}

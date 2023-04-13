@@ -24,3 +24,28 @@ export const userSignup = createAsyncThunk(
         }
     }
 );
+
+export const userUpdate = createAsyncThunk(
+    "Auth/userUpdateReq",
+    async (formData, { rejectWithValue }) => {
+        // console.log(formData);
+        try {
+            const response = await AuthApi.updateUser(formData);
+            return response.data;
+        } catch (error) {
+            throw rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const changePassword = createAsyncThunk(
+    "Auth/changePasswordReq",
+    async (formData, { rejectWithValue }) => {
+        try {
+            const response = await AuthApi.changePassword(formData);
+            return response.data;
+        } catch (error) {
+            throw rejectWithValue(error.response.data);
+        }
+    }
+);
